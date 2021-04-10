@@ -2,10 +2,26 @@
 const EMPTY_HEART = '♡'
 const FULL_HEART = '♥'
 
-// Your JavaScript code goes here!
+const articleHearts = document.querySelectorAll(".like-glyph");
 
+function likeCallback(e) {
+  const heart = e;
+  mimicServerCall()
+    .then(function(message){
+       heart.innerText = glyphStates[heart.innerText];
+       heart.style.color = colorStates[heart.style.color];
+    })
+    .catch(function(error) {
+      const modal = document.getElementById("modal");
+      modal.className = "";
+      modal.innerText = error;
+      setTimeout(() =>  modal.className = "hidden", 5000);
+    });
+}
 
-
+for (const glyph of articleHearts) {
+  glyph.addEventListener("click", likeCallback);
+}
 
 //------------------------------------------------------------------------------
 // Don't change the code below: this function mocks the server response
@@ -14,7 +30,7 @@ const FULL_HEART = '♥'
 function mimicServerCall(url="http://mimicServer.example.com", config={}) {
   return new Promise(function(resolve, reject) {
     setTimeout(function() {
-      let isRandomFailure = Math.random() < .2
+      const isRandomFailure = Math.random() < .2
       if (isRandomFailure) {
         reject("Random server error. Try again.");
       } else {
